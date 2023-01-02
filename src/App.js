@@ -22,7 +22,14 @@ function App() {
 
         <Weather />
         <p className="footnote">
-          <a href="/">Open-source code</a> by Cheryl
+          <a
+            href="https://github.com/CherylChong/Weather-React"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Open-source code
+          </a>{" "}
+          by Cheryl
         </p>
       </header>
     </div>
