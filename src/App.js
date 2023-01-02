@@ -1,22 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import Weather from "./Weather";
+import { MagnifyingGlass } from "react-loader-spinner";
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          Find weather details here
+          <MagnifyingGlass
+            visible={true}
+            height="60"
+            width="60"
+            ariaLabel="MagnifyingGlass-loading"
+            wrapperStyle={{}}
+            wrapperClass="MagnifyingGlass-wrapper"
+            glassColor="#c0efff"
+            color="#61dafb"
+          />
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+
+        <Weather />
+        <p className="footnote">
+          <a href="/">Open-source code</a> by Cheryl
+        </p>
       </header>
     </div>
   );

@@ -36,3 +36,16 @@
     transform: rotate(360deg);
   }
 }
+.footnote {
+  font-size: small;
+  font-style: italic;
+}
+
+.no-bullets {
+  list-style-type: none;
+  padding: 0;
+}
+
+.forecast-details {
+  font-size: small;
+}
