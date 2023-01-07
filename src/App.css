@@ -49,3 +49,8 @@
 .forecast-details {
   font-size: small;
 }
+
+.units {
+  font-size: 60%;
+  vertical-align: super;
+}

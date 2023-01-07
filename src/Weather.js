@@ -4,6 +4,18 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.css";
 
 export default function Weather() {
+  const days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  const today = new Date();
+
+  //Data to be updated
   let [load, setLoad] = useState(false);
   let [city, setCity] = useState(null);
   let [searchedCity, setSearchedCity] = useState(null);
@@ -12,23 +24,46 @@ export default function Weather() {
   let [humidity, setHumidity] = useState(null);
   let [wind, setWind] = useState(null);
   let [icon, setIcon] = useState(null);
+  let [cityLat, setCityLat] = useState(null);
+  let [cityLon, setCityLon] = useState(null);
+
+  //weather api details
+  let units = `metric`;
+  let apiKey = `ece3d24c64eca2f5b04e85550d590173`;
+  let apiURLMain = `https://api.openweathermap.org/data/2.5/`;
+  let apiURLDefault = `${apiURLMain}weather?q=${city}&units=${units}&appid=${apiKey}`;
+  let apiURLForecast = `https://api.openweathermap.org/data/2.5/onecall?lat=${cityLat}&lon=${cityLon}&units=${units}&exclude=minutely,hourly,alerts&appid=${apiKey}`;
+
+  function updateForecast(response) {
+    console.log(response);
+    console.log(days[today.getDay() + 1]);
+  }
 
   function updateInfo(response) {
-    setTemp(`${Math.round(response.data.main.temp)}°C`);
-    setDes(`${response.data.weather[0].description}`);
+    console.log(response);
+    setSearchedCity(`${response.data.name}`);
+    setTemp(`${Math.round(response.data.main.temp)}`);
+    setDes(`${response.data.weather[0].main}`);
     setHumidity(`Humidity: ${response.data.main.humidity}%`);
     setWind(`Wind: ${response.data.wind.speed}km/h`);
     setIcon(
       `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`
     );
+    setCityLat(`${response.data.coord.lat}`);
+    setCityLon(`${response.data.coord.lon}`);
+    axios.get(apiURLForecast).then(updateForecast);
     setLoad(true);
+  }
+
+  function errorMsg() {
+    alert(`Sorry, we do not have the data.`);
   }
 
   function handleSubmit(event) {
     event.preventDefault();
-    let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=ece3d24c64eca2f5b04e85550d590173&units=metric`;
-    axios.get(url).then(updateInfo);
-    setSearchedCity(`${city}`);
+    axios.get(apiURLDefault).then(updateInfo).catch(errorMsg);
+
+    //setSearchedCity(`${city}`);
   }
 
   function updateCity(event) {
@@ -123,7 +158,9 @@ export default function Weather() {
         {form}
         <ul className="no-bullets">
           <h1>{searchedCity}</h1>
-          <li>{temp}</li>
+          <li>
+            {temp} <span className="units">°C | °F</span>
+          </li>
           <li>
             <img src={icon} alt="icon" />
           </li>
