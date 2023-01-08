@@ -24,34 +24,55 @@ export default function Weather() {
   let [humidity, setHumidity] = useState(null);
   let [wind, setWind] = useState(null);
   let [icon, setIcon] = useState(null);
-  let [cityLat, setCityLat] = useState(null);
-  let [cityLon, setCityLon] = useState(null);
+  //let [cityLat, setCityLat] = useState(null);
+  //let [cityLon, setCityLon] = useState(null);
+  //let [forecastOneIcon, setForecastOneIcon] = useState(null);
 
   //weather api details
   let units = `metric`;
   let apiKey = `ece3d24c64eca2f5b04e85550d590173`;
   let apiURLMain = `https://api.openweathermap.org/data/2.5/`;
   let apiURLDefault = `${apiURLMain}weather?q=${city}&units=${units}&appid=${apiKey}`;
-  let apiURLForecast = `https://api.openweathermap.org/data/2.5/onecall?lat=${cityLat}&lon=${cityLon}&units=${units}&exclude=minutely,hourly,alerts&appid=${apiKey}`;
+  let apiURLFahrenheit = `${apiURLMain}weather?q=${city}&units=imperial&appid=${apiKey}`;
+  //let apiURLForecast = `https://api.openweathermap.org/data/2.5/onecall?lat=${cityLat}&lon=${cityLon}&units=${units}&exclude=minutely,hourly,alerts&appid=${apiKey}`;
 
-  function updateForecast(response) {
-    console.log(response);
-    console.log(days[today.getDay() + 1]);
-  }
+  //function updateForecast(response) {
+  //console.log(response);
+  //console.log(days[today.getDay()]);
+  //console.log(today.getDay());
+  //console.log(days[today.getDay() + 1]);
+  //setForecastOneIcon(`${response.data.daily[0].weather[0].icon}`);
+  //}
 
   function updateInfo(response) {
-    console.log(response);
+    //console.log(response);
     setSearchedCity(`${response.data.name}`);
     setTemp(`${Math.round(response.data.main.temp)}`);
     setDes(`${response.data.weather[0].main}`);
     setHumidity(`Humidity: ${response.data.main.humidity}%`);
-    setWind(`Wind: ${response.data.wind.speed}km/h`);
+    setWind(`Wind: ${response.data.wind.speed} meter/sec`);
     setIcon(
       `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`
     );
-    setCityLat(`${response.data.coord.lat}`);
-    setCityLon(`${response.data.coord.lon}`);
-    axios.get(apiURLForecast).then(updateForecast);
+    //setCityLat(`${response.data.coord.lat}`);
+    //setCityLon(`${response.data.coord.lon}`);
+    //axios.get(apiURLForecast).then(updateForecast);
+    setLoad(true);
+  }
+
+  function updateInfoFahrenheit(response) {
+    //console.log(response);
+    setSearchedCity(`${response.data.name}`);
+    setTemp(`${Math.round(response.data.main.temp)}`);
+    setDes(`${response.data.weather[0].main}`);
+    setHumidity(`Humidity: ${response.data.main.humidity}%`);
+    setWind(`Wind: ${response.data.wind.speed} miles/hour`);
+    setIcon(
+      `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`
+    );
+    //setCityLat(`${response.data.coord.lat}`);
+    //setCityLon(`${response.data.coord.lon}`);
+    //axios.get(apiURLForecast).then(updateForecast);
     setLoad(true);
   }
 
@@ -62,8 +83,12 @@ export default function Weather() {
   function handleSubmit(event) {
     event.preventDefault();
     axios.get(apiURLDefault).then(updateInfo).catch(errorMsg);
-
     //setSearchedCity(`${city}`);
+  }
+
+  function showFahrenheit(event) {
+    event.preventDefault();
+    axios.get(apiURLFahrenheit).then(updateInfoFahrenheit).catch(errorMsg);
   }
 
   function updateCity(event) {
@@ -101,7 +126,7 @@ export default function Weather() {
     <div className="row align-items-center forecast-details">
       <div className="col">
         <ul className="no-bullets">
-          <h6>Mon</h6>
+          <h6>{days[today.getDay() + 1].substring(0, 3)}</h6>
           <li>
             <img src={icon} alt="icon" width="70%" />
           </li>
@@ -158,8 +183,18 @@ export default function Weather() {
         {form}
         <ul className="no-bullets">
           <h1>{searchedCity}</h1>
+
           <li>
-            {temp} <span className="units">°C | °F</span>
+            {temp}{" "}
+            <span className="units">
+              <a href="/" onClick={handleSubmit}>
+                °C
+              </a>{" "}
+              |{" "}
+              <a href="/" onClick={showFahrenheit}>
+                °F
+              </a>
+            </span>
           </li>
           <li>
             <img src={icon} alt="icon" />
